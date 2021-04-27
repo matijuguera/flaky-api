@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const DEFAULT_MAX_RETRIES = 3
+const defaultMaxRetries = 3
 
 var (
 	ErrUnexpectedMethod          = errors.New("unexpected client method, must be Get")
@@ -51,7 +51,7 @@ func DefaultBackoff(_ int) time.Duration {
 // New constructs a new DefaultClient with sensible default values
 func New(client HTTPClient) *Client {
 	return &Client{
-		MaxRetries: DEFAULT_MAX_RETRIES,
+		MaxRetries: defaultMaxRetries,
 		Backoff:    DefaultBackoff,
 		HttpClient: client,
 	}

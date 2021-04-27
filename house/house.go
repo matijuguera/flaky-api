@@ -26,8 +26,8 @@ type HousesResponse struct {
 }
 
 const (
-	HOMEVISION_ENDPOINT    = "http://app-homevision-staging.herokuapp.com/api_project"
-	PHOTOS_REPOSITORY_PATH = "photos-repository/"
+	homevisionEndpoint   = "http://app-homevision-staging.herokuapp.com/api_project"
+	photosRepositoryPath = "photos-repository/"
 )
 
 var defaultHttpClient = newHttpClient()
@@ -45,7 +45,7 @@ func newHttpClient() *httpretry.Client {
 
 func Get(page int) ([]House, error) {
 	//do request
-	res, err := defaultHttpClient.Get(fmt.Sprintf("%s/houses?page=%d", HOMEVISION_ENDPOINT, page))
+	res, err := defaultHttpClient.Get(fmt.Sprintf("%s/houses?page=%d", homevisionEndpoint, page))
 	if err != nil {
 		return []House{}, err
 	}
@@ -66,7 +66,7 @@ func Get(page int) ([]House, error) {
 
 func ConcurrentDownload(h House, wgFile *sync.WaitGroup) {
 	defer wgFile.Done()
-	if err := downloader.DownloadFile(h.PhotoURL, PHOTOS_REPOSITORY_PATH, h.GetFilename()); err != nil {
+	if err := downloader.DownloadFile(h.PhotoURL, photosRepositoryPath, h.GetFilename()); err != nil {
 		log.Printf("error downloading house [%d]: %v", h.Id, err)
 	}
 }

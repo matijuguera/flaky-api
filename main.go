@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	TOTAL_PAGES = 10
+	totalPages = 10
 )
 
 func downloadHouses(page int, wg *sync.WaitGroup) {
@@ -29,7 +29,7 @@ func downloadHouses(page int, wg *sync.WaitGroup) {
 
 func main() {
 	var wg sync.WaitGroup
-	for i := 1; i <= TOTAL_PAGES; i++ {
+	for i := 1; i <= totalPages; i++ {
 		wg.Add(1)
 		go downloadHouses(i, &wg)
 	}
