@@ -49,7 +49,3 @@ Use `go run <project folder>` to run the main.go
 # Photos
 
 After running the script, you will see all the photos inside the folder "/photos-repository"
-
-```
-
-```
