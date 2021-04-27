@@ -13,10 +13,43 @@ There are a few gotchas to watch out for:
 1. This is a _flaky_ API! That means that it will likely fail with a non-200 response code. Your code _must_ handle these errors correctly so that all photos are downloaded
 2. Downloading photos is slow so please think a bit about how you would optimize your downloads, making use of concurrency
 
+# Code organization
+
+I use the code organization given in the GolangBootcamp book http://www.golangbootcamp.com/book/methods#cid33
+
+# Http Retry Package
+
+I created my own custom http-retry package, there you will find different Backoff Strategy
+
+- ExponentialBackoff returns ever increasing backoffs by a power of 2
+
+- LinearBackoff returns increasing durations, each a second longer than the last
+
+- DefaultBackoff always returns 1 second
+
+Example of use:
+
+```
+package house
+
+var defaultHttpClient = newHttpClient()
+
+func newHttpClient() *httpretry.Client {
+	httpRetryClient := httpretry.New()
+	httpRetryClient.Backoff = httpretry.ExponentialBackoff
+
+	return httpRetryClient
+}
+```
+
 # Run the project
 
 Use `go run <project folder>` to run the main.go
 
-# Code organization
+# Photos
 
-I use the code organization given in the GolangBootcamp book http://www.golangbootcamp.com/book/methods#cid33
+After running the script, you will see all the photos inside the folder "/photos-repository"
+
+```
+
+```
