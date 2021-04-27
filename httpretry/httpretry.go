@@ -8,7 +8,21 @@ import (
 	"time"
 )
 
-func Get(URL string, retryDuration time.Duration, retries int) (*http.Response, error) {
+type BackoffStrategy func(retry int) time.Duration
+
+func ExponentialBackoff(i int) time.Duration {
+	return time.Duration(1<<uint(i)) * time.Second
+}
+
+func LinearBackoff(i int) time.Duration {
+	return time.Duration(i) * time.Second
+}
+
+func DefaultBackoff(_ int) time.Duration {
+	return 1 * time.Second
+}
+
+func Get(URL string, backoffStrategy BackoffStrategy, retries int) (*http.Response, error) {
 	errs := errors.New("max amount of retries reached, no response was found")
 
 	for i := 0; i <= retries; i++ {
@@ -27,7 +41,7 @@ func Get(URL string, retryDuration time.Duration, retries int) (*http.Response, 
 
 		//avoids sleep at the last iteration
 		if i != retries {
-			time.Sleep(retryDuration)
+			time.Sleep(backoffStrategy(i))
 		}
 	}
 
