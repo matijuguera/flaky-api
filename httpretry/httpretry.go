@@ -1,4 +1,4 @@
-package httpRetry
+package httpretry
 
 import (
 	"errors"

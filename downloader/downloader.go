@@ -1,7 +1,7 @@
 package downloader
 
 import (
-	apierror "flaky-api/apiError"
+	"flaky-api/apierror"
 	"io"
 	"net/http"
 	"os"
