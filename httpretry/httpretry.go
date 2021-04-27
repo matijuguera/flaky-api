@@ -11,14 +11,14 @@ import (
 const DEFAULT_MAX_RETRIES = 3
 
 var (
-	ErrUnexpectedMethod  = errors.New("unexpected client method, must be Get")
-	ErrMaxAmoutOfRetries = errors.New("max amount of retries reached, no response was found")
+	ErrUnexpectedMethod          = errors.New("unexpected client method, must be Get")
+	ErrMaxAmoutOfRetries         = errors.New("max amount of retries reached, no response was found")
+	ErrMaxRetriesGreaterThanZero = errors.New("max retries must be greater than 0")
 )
 
 type BackoffStrategy func(retry int) time.Duration
 type Client struct {
-	httpClient *http.Client
-	Timeout    time.Duration
+	HttpClient HTTPClient
 	MaxRetries int
 	Backoff    BackoffStrategy
 }
@@ -27,6 +27,10 @@ type Client struct {
 type params struct {
 	method string
 	url    string
+}
+
+type HTTPClient interface {
+	Do(req *http.Request) (*http.Response, error)
 }
 
 // ExponentialBackoff returns ever increasing backoffs by a power of 2
@@ -45,17 +49,17 @@ func DefaultBackoff(_ int) time.Duration {
 }
 
 // New constructs a new DefaultClient with sensible default values
-func New() *Client {
+func New(client HTTPClient) *Client {
 	return &Client{
 		MaxRetries: DEFAULT_MAX_RETRIES,
 		Backoff:    DefaultBackoff,
-		httpClient: &http.Client{},
+		HttpClient: client,
 	}
 }
 
 // Get provides the same functionality as http.Client.Get and creates its own constructor
 func Get(url string) (resp *http.Response, err error) {
-	c := New()
+	c := New(&http.Client{})
 	return c.Get(url)
 }
 
@@ -77,18 +81,18 @@ func getRequest(p params) (*http.Request, error) {
 
 // doWithRetry provides a generic way to do the request with the given params
 func (c *Client) doWithRetry(p params) (*http.Response, error) {
-	c.httpClient.Timeout = c.Timeout
+	// c.HttpClient.Timeout = c.Timeout
 	request, err := getRequest(p)
 	if err != nil {
 		return nil, err
 	}
 
 	if c.MaxRetries <= 0 {
-		return nil, errors.New("max retries must be greater than 0")
+		return nil, ErrMaxRetriesGreaterThanZero
 	}
 
 	for i := 0; i <= c.MaxRetries; i++ {
-		resp, err := c.httpClient.Do(request)
+		resp, err := c.HttpClient.Do(request)
 		if err != nil {
 			ErrMaxAmoutOfRetries = fmt.Errorf("%w \n -%v", ErrMaxAmoutOfRetries, err)
 			continue

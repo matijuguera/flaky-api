@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"sync"
 	"time"
 )
@@ -32,10 +33,12 @@ const (
 var defaultHttpClient = newHttpClient()
 
 func newHttpClient() *httpretry.Client {
-	httpRetryClient := httpretry.New()
+	client := &http.Client{}
+	client.Timeout = 30 * time.Second
+
+	httpRetryClient := httpretry.New(client)
 	httpRetryClient.Backoff = httpretry.LinearBackoff
 	httpRetryClient.MaxRetries = 10
-	httpRetryClient.Timeout = 30 * time.Second
 
 	return httpRetryClient
 }
