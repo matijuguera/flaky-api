@@ -81,7 +81,7 @@ func getRequest(p params) (*http.Request, error) {
 
 // doWithRetry provides a generic way to do the request with the given params
 func (c *Client) doWithRetry(p params) (*http.Response, error) {
-	// c.HttpClient.Timeout = c.Timeout
+
 	request, err := getRequest(p)
 	if err != nil {
 		return nil, err
