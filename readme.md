@@ -13,6 +13,6 @@ There are a few gotchas to watch out for:
 1. This is a _flaky_ API! That means that it will likely fail with a non-200 response code. Your code _must_ handle these errors correctly so that all photos are downloaded
 2. Downloading photos is slow so please think a bit about how you would optimize your downloads, making use of concurrency
 
-# `go run <project folder>`
+# Run the project
 
 Use `go run <project folder>` to run the main.go
