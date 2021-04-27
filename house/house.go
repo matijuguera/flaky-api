@@ -54,7 +54,11 @@ func Get(page int) ([]House, error) {
 
 func Download(h House, wgFile *sync.WaitGroup) {
 	defer wgFile.Done()
-	if err := downloader.DownloadFile(h.PhotoURL, PHOTOS_REPOSITORY_PATH, fmt.Sprintf("id-%d-%s.jpg", h.Id, h.Address)); err != nil {
+	if err := downloader.DownloadFile(h.PhotoURL, PHOTOS_REPOSITORY_PATH, h.GetFilename()); err != nil {
 		log.Printf("error downloading house: %v", err)
 	}
+}
+
+func (h *House) GetFilename() string {
+	return fmt.Sprintf("id-%d-%s.jpg", h.Id, h.Address)
 }
