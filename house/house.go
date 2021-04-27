@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"sync"
+	"time"
 )
 
 type House struct {
@@ -26,12 +27,22 @@ type HousesResponse struct {
 const (
 	HOMEVISION_ENDPOINT    = "http://app-homevision-staging.herokuapp.com/api_project"
 	PHOTOS_REPOSITORY_PATH = "photos-repository/"
-	DEFAULT_MAX_RETRIES    = 10
 )
+
+var defaultHttpClient = newHttpClient()
+
+func newHttpClient() *httpretry.Client {
+	httpRetryClient := httpretry.New()
+	httpRetryClient.Backoff = httpretry.LinearBackoff
+	httpRetryClient.MaxRetries = 10
+	httpRetryClient.Timeout = 30 * time.Second
+
+	return httpRetryClient
+}
 
 func Get(page int) ([]House, error) {
 	//do request
-	res, err := httpretry.Get(fmt.Sprintf("%s/houses?page=%d", HOMEVISION_ENDPOINT, page), httpretry.ExponentialBackoff, DEFAULT_MAX_RETRIES)
+	res, err := defaultHttpClient.Get(fmt.Sprintf("%s/houses?page=%d", HOMEVISION_ENDPOINT, page))
 	if err != nil {
 		return []House{}, err
 	}
