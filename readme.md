@@ -44,7 +44,8 @@ func newHttpClient() *httpretry.Client {
 
 # Run the project
 
-Use `go run <project folder>` to run the main.go
+- Use `go mod download` to download the modules
+- Use `go run <project folder>` to run the main.go
 
 # Photos
 
