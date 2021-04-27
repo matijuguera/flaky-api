@@ -46,6 +46,8 @@ func newHttpClient() *httpretry.Client {
 
 I tested the http retry package with the library https://github.com/stretchr/testify
 
+To run the test `go test ./... -cover`
+
 # Run the project
 
 - Use `go mod download` to download the modules
