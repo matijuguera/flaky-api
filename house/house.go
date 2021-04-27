@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
+	"sync"
 	"time"
 )
 
@@ -22,6 +24,7 @@ type HousesResponse struct {
 
 const (
 	HOMEVISION_ENDPOINT    = "http://app-homevision-staging.herokuapp.com/api_project"
+	PHOTOS_REPOSITORY_PATH = "photos-repository/"
 	DEFAULT_RETRY_DURATION = 2 * time.Second
 	DEFAULT_MAX_RETRIES    = 10
 )
@@ -45,4 +48,11 @@ func Get(page int) ([]House, error) {
 	}
 
 	return housesResponse.Houses, nil
+}
+
+func Download(h House, wgFile *sync.WaitGroup) {
+	defer wgFile.Done()
+	if err := downloader.DownloadFile(h.PhotoURL, PHOTOS_REPOSITORY_PATH, fmt.Sprintf("id-%d-%s.jpg", h.Id, h.Address)); err != nil {
+		log.Printf("error downloading house: %v", err)
+	}
 }
