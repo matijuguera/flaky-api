@@ -22,7 +22,7 @@ func downloadHouses(page int, wg *sync.WaitGroup) {
 	var wgFile sync.WaitGroup
 	for _, h := range houses {
 		wgFile.Add(1)
-		go house.Download(h, &wgFile)
+		go house.ConcurrentDownload(h, &wgFile)
 	}
 	wgFile.Wait()
 }

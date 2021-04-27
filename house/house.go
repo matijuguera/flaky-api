@@ -52,10 +52,10 @@ func Get(page int) ([]House, error) {
 	return housesResponse.Houses, nil
 }
 
-func Download(h House, wgFile *sync.WaitGroup) {
+func ConcurrentDownload(h House, wgFile *sync.WaitGroup) {
 	defer wgFile.Done()
 	if err := downloader.DownloadFile(h.PhotoURL, PHOTOS_REPOSITORY_PATH, h.GetFilename()); err != nil {
-		log.Printf("error downloading house: %v", err)
+		log.Printf("error downloading house [%d]: %v", h.Id, err)
 	}
 }
 
