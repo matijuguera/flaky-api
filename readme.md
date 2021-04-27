@@ -16,3 +16,7 @@ There are a few gotchas to watch out for:
 # Run the project
 
 Use `go run <project folder>` to run the main.go
+
+# Code organization
+
+I use the code organization given in the GolangBootcamp book http://www.golangbootcamp.com/book/methods#cid33
