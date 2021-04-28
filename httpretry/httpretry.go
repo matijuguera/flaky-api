@@ -17,6 +17,7 @@ var (
 )
 
 type BackoffStrategy func(retry int) time.Duration
+
 type Client struct {
 	HttpClient HTTPClient
 	MaxRetries int
@@ -57,17 +58,6 @@ func New(client HTTPClient) *Client {
 	}
 }
 
-// Get provides the same functionality as http.Client.Get and creates its own constructor
-func Get(url string) (resp *http.Response, err error) {
-	c := New(&http.Client{})
-	return c.Get(url)
-}
-
-// Get provides the same functionality as http.Client.Get
-func (c *Client) Get(url string) (resp *http.Response, err error) {
-	return c.doWithRetry(params{method: http.MethodGet, url: url})
-}
-
 // getRequest returns the valids request with the given method that doWithRetry supports
 func getRequest(p params) (*http.Request, error) {
 	switch p.method {
@@ -77,6 +67,17 @@ func getRequest(p params) (*http.Request, error) {
 		return nil, ErrUnexpectedMethod
 	}
 
+}
+
+// Get provides the same functionality as http.Client.Get and creates its own constructor
+func Get(url string) (resp *http.Response, err error) {
+	c := New(&http.Client{})
+	return c.Get(url)
+}
+
+// Get provides the same functionality as http.Client.Get
+func (c *Client) Get(url string) (resp *http.Response, err error) {
+	return c.doWithRetry(params{method: http.MethodGet, url: url})
 }
 
 // doWithRetry provides a generic way to do the request with the given params, if the max retries have been reached a wrapped error will be returned with all the api errors
