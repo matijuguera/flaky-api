@@ -19,7 +19,7 @@ I use the code organization given in the GolangBootcamp book http://www.golangbo
 
 # Http Retry Package
 
-I created my own custom http-retry package, there you will find different Backoff Strategy
+I created my own custom http-retry package, inside it you will find different Backoff Strategies
 
 - ExponentialBackoff returns ever increasing backoffs by a power of 2
 
