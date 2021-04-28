@@ -2,6 +2,7 @@ package main
 
 import (
 	"flaky-api/house"
+	"fmt"
 	"log"
 	"sync"
 )
@@ -10,7 +11,7 @@ const (
 	totalPages = 10
 )
 
-func downloadHouses(page int, wg *sync.WaitGroup) {
+func concurrentDownloadHouses(page int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	houses, err := house.Get(page)
@@ -31,7 +32,8 @@ func main() {
 	var wg sync.WaitGroup
 	for i := 1; i <= totalPages; i++ {
 		wg.Add(1)
-		go downloadHouses(i, &wg)
+		go concurrentDownloadHouses(i, &wg)
 	}
 	wg.Wait()
+	fmt.Printf("Look inside the dir %s\n", house.PhotosRepositoryPath)
 }
