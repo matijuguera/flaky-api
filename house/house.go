@@ -12,6 +12,13 @@ import (
 	"time"
 )
 
+const (
+	homevisionEndpoint   = "http://app-homevision-staging.herokuapp.com/api_project/"
+	PhotosRepositoryPath = "photos-repository/"
+)
+
+var defaultHttpClient = newHttpClient()
+
 type House struct {
 	Id        int    `json:"id"`
 	Address   string `json:"address"`
@@ -24,13 +31,6 @@ type HousesResponse struct {
 	Houses []House `json:"houses"`
 	Ok     bool    `json:"ok"`
 }
-
-const (
-	homevisionEndpoint   = "http://app-homevision-staging.herokuapp.com/api_project/"
-	PhotosRepositoryPath = "photos-repository/"
-)
-
-var defaultHttpClient = newHttpClient()
 
 func newHttpClient() *httpretry.Client {
 	client := &http.Client{}
