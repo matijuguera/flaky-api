@@ -50,7 +50,6 @@ To run the test `go test ./... -cover`
 
 # Run the project
 
-- Use `go mod download` to download the modules
 - Use `go run <project folder>` to run the main.go
 
 # Photos
