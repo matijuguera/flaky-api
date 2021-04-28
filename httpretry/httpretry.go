@@ -51,6 +51,12 @@ func getRequest(p params) (*http.Request, error) {
 	}
 }
 
+// Get provides the same functionality as http.Client.Get and creates its own constructor
+func Get(url string) (resp *http.Response, err error) {
+	c := New(&http.Client{})
+	return c.Get(url)
+}
+
 // Get provides the same functionality as http.Client.Get
 func (c *Client) Get(url string) (resp *http.Response, err error) {
 	return c.doWithRetry(params{method: http.MethodGet, url: url})
