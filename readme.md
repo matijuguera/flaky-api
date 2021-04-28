@@ -47,6 +47,8 @@ I tested the http retry package with the library https://github.com/stretchr/tes
 
 To run the test `go test ./...`
 
+To check coverage `go test ./... --cover`
+
 # Run the project
 
 Use `go run <project folder>` to run the main.go
