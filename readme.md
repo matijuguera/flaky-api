@@ -32,11 +32,9 @@ Example of use:
 ```
 package house
 
-var defaultHttpClient = newHttpClient()
-
 func newHttpClient() *httpretry.Client {
 	httpRetryClient := httpretry.New()
-	httpRetryClient.Backoff = httpretry.ExponentialBackoff
+	httpRetryClient.Backoff = httpretry.ExponentialBackoff <------
 
 	return httpRetryClient
 }
