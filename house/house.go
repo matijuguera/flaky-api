@@ -26,7 +26,7 @@ type HousesResponse struct {
 }
 
 const (
-	homevisionEndpoint   = "http://app-homevision-staging.herokuapp.com/api_project"
+	homevisionEndpoint   = "http://app-homevision-staging.herokuapp.com/api_project/"
 	photosRepositoryPath = "photos-repository/"
 )
 
@@ -45,7 +45,7 @@ func newHttpClient() *httpretry.Client {
 
 func Get(page int) ([]House, error) {
 	//do request
-	res, err := defaultHttpClient.Get(fmt.Sprintf("%s/houses?page=%d", homevisionEndpoint, page))
+	res, err := defaultHttpClient.Get(fmt.Sprintf("%shouses?page=%d", homevisionEndpoint, page))
 	if err != nil {
 		return []House{}, err
 	}

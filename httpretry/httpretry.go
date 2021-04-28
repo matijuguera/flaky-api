@@ -79,8 +79,9 @@ func getRequest(p params) (*http.Request, error) {
 
 }
 
-// doWithRetry provides a generic way to do the request with the given params
+// doWithRetry provides a generic way to do the request with the given params, if the max retries have been reached a wrapped error will be returned with all the api errors
 func (c *Client) doWithRetry(p params) (*http.Response, error) {
+	errs := fmt.Errorf("%w", ErrMaxAmoutOfRetries)
 
 	request, err := getRequest(p)
 	if err != nil {
@@ -94,14 +95,14 @@ func (c *Client) doWithRetry(p params) (*http.Response, error) {
 	for i := 0; i <= c.MaxRetries; i++ {
 		resp, err := c.HttpClient.Do(request)
 		if err != nil {
-			ErrMaxAmoutOfRetries = fmt.Errorf("%w \n -%v", ErrMaxAmoutOfRetries, err)
+			errs = fmt.Errorf("%w \n -%v", errs, err)
 			continue
 		}
 
 		if resp != nil && resp.StatusCode == 200 {
 			return resp, nil
 		} else {
-			ErrMaxAmoutOfRetries = fmt.Errorf("%w \n -%v", ErrMaxAmoutOfRetries, apierror.NewAPIError(resp.StatusCode, "http retry status error", p.url, resp.Status))
+			errs = fmt.Errorf("%w \n -%v", errs, apierror.NewAPIError(resp.StatusCode, "http retry status error", p.url, resp.Status))
 		}
 
 		//avoids sleep at the last iteration
@@ -110,5 +111,5 @@ func (c *Client) doWithRetry(p params) (*http.Response, error) {
 		}
 	}
 
-	return nil, ErrMaxAmoutOfRetries
+	return nil, errs
 }
