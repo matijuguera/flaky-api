@@ -17,7 +17,7 @@ const (
 	PhotosRepositoryPath = "photos-repository/"
 )
 
-var defaultHttpClient = newHttpClient()
+var HttpRetryClient = newHttpRetryClient()
 
 type House struct {
 	Id        int    `json:"id"`
@@ -32,7 +32,7 @@ type HousesResponse struct {
 	Ok     bool    `json:"ok"`
 }
 
-func newHttpClient() *httpretry.Client {
+func newHttpRetryClient() *httpretry.Client {
 	client := &http.Client{}
 	client.Timeout = 30 * time.Second
 
@@ -45,7 +45,7 @@ func newHttpClient() *httpretry.Client {
 
 func Get(page int) ([]House, error) {
 	//do request
-	res, err := defaultHttpClient.Get(fmt.Sprintf("%shouses?page=%d", homevisionEndpoint, page))
+	res, err := HttpRetryClient.Get(fmt.Sprintf("%shouses?page=%d", homevisionEndpoint, page))
 	if err != nil {
 		return []House{}, err
 	}
