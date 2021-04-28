@@ -33,8 +33,9 @@ Example of use:
 package house
 
 func newHttpClient() *httpretry.Client {
-	httpRetryClient := httpretry.New()
-	httpRetryClient.Backoff = httpretry.ExponentialBackoff <------
+	client := &http.Client{}
+	httpRetryClient := httpretry.New(client)
+	httpRetryClient.Backoff = httpretry.LinearBackoff <------
 
 	return httpRetryClient
 }
@@ -44,11 +45,11 @@ func newHttpClient() *httpretry.Client {
 
 I tested the http retry package with the library https://github.com/stretchr/testify
 
-To run the test `go test ./... -cover`
+To run the test `go test ./...`
 
 # Run the project
 
-- Use `go run <project folder>` to run the main.go
+Use `go run <project folder>` to run the main.go
 
 # Photos
 
